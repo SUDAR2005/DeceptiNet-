@@ -1,4 +1,4 @@
-FROM python:3.9-slim
+FROM python:3.11.9-slim
 
 WORKDIR /app
 
@@ -7,5 +7,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Check if the files are present before running the script
-CMD ["sh", "-c", "if [ -f data.csv ] && [ -f node.csv ]; then python optimal_honeypot.py data.csv node.csv; else echo 'Error: data.csv and node.csv not found in the mounted volume.'; fi"]
+CMD ["sh", "-c", "if [ -f Data/data.csv ] && [ -f Data/node.csv ]; then python optimal_honeypot.py data.csv node.csv; else echo 'Error: place your data.csv and node.csv and mounted volume.'; fi"]
