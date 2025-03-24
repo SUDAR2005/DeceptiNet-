@@ -1,1 +1,4 @@
 env
+.hintrc
+__pycache__
+cvss_sample.py

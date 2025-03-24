@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeceptiNet - Honeypot Placement Optimization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"></script>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <header>
+        <div class="logo">DeceptiNet</div>
+        <div class="subtitle">Honeypot Placement Optimization System</div>
+    </header>
+    
+    <div class="container">
+        <div class="panel input-panel">
+            <h2>Network Configuration</h2>
+            <div class="alert" id="alert"></div>
+            <form id="optimization-form">
+                <div class="form-group">
+                    <div class="file-input">
+                        <label for="node-data">Upload Node Data (CSV)
+                            <br><small>Contains node IDs, asset values & vulnerabilities</small>
+                        </label>
+                        <input type="file" id="node-data">
+                        <div class="file-name" id="node-filename">No file selected</div>
+                    </div>
+                    
+                    <div class="file-input">
+                        <label for="edge-data">Upload Edge Data (CSV)
+                            <br><small>Contains source & target node connections</small>
+                        </label>
+                        <input type="file" id="edge-data">
+                        <div class="file-name" id="edge-filename">No file selected</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="algorithm">Optimization Algorithm</label>
+                    <select id="algorithm">
+                        <option value="genetic">Genetic Algorithm</option>
+                        <option value="simulated_annealing">Simulated Annealing</option>
+                        <option value="particle_swarm">Particle Swarm Optimization</option>
+                        <option value="ant_colony">Ant Colony Optimization</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="honeypots">Number of Honeypots</label>
+                    <input type="number" id="honeypots" min="1" max="20" value="5">
+                </div>
+                <button type="submit" id="submit-btn">Optimize Network</button>
+            </form>
+            <div class="algorithm-info" id="algorithm-info">
+                <strong>Genetic Algorithm:</strong> Uses evolutionary principles to find optimal honeypot placement through selection, crossover, and mutation operations.
+            </div>
+        </div>
+        <div class="panel visualization-panel">
+            <h2>Network Visualization</h2>
+            <div class="canvas-container">
+                <div id="canvas"></div>
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <div class="loading-text">Optimizing network...</div>
+                </div>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ff8a80;"></div>
+                        <span>High Value Asset</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #4fc3f7;"></div>
+                        <span>Honeypot</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ffab40;"></div>
+                        <span>Attack Path</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button class="control-btn" id="rotate-toggle">Pause Rotation</button>
+                <button class="control-btn" id="attack-paths-toggle">Show Attack Paths</button>
+                <button class="control-btn" id="reset-view">Reset View</button>
+            </div>
+            
+            <div class="stats-panel">
+                <div class="stats-title">Optimization Results</div>
+                <div class="stats-content" id="stats-content">
+                    <div class="stat-item">
+                        <div class="stat-label">Total Nodes</div>
+                        <div class="stat-value">--</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Total Edges</div>
+                        <div class="stat-value">--</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Honeypots Placed</div>
+                        <div class="stat-value">--</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Optimization Score</div>
+                        <div class="stat-value">--</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts\main.js"></script>
+    </body>
+</html>
