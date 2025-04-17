@@ -3,114 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeceptiNet - Honeypot Placement Optimization</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"></script>
-    <link rel="stylesheet" href="styles/main.css">
+    <title>Network Visualization</title>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
+    <link rel="stylesheet" href="./styles/main.css">
 </head>
 <body>
-    <header>
-        <div class="logo">DeceptiNet</div>
-        <div class="subtitle">Honeypot Placement Optimization System</div>
-    </header>
+    <div class="header">
+        <div class="logo">Decepticon</div>
+        <div class="subtitle">Interactive 3D Network Topology</div>
+    </div>
     
-    <div class="container">
-        <div class="panel input-panel">
-            <h2>Network Configuration</h2>
-            <div class="alert" id="alert"></div>
-            <form id="optimization-form">
-                <div class="form-group">
-                    <div class="file-input">
-                        <label for="node-data">Upload Node Data (CSV)
-                            <br><small>Contains node IDs, asset values & vulnerabilities</small>
-                        </label>
-                        <input type="file" id="node-data">
-                        <div class="file-name" id="node-filename">No file selected</div>
-                    </div>
-                    
-                    <div class="file-input">
-                        <label for="edge-data">Upload Edge Data (CSV)
-                            <br><small>Contains source & target node connections</small>
-                        </label>
-                        <input type="file" id="edge-data">
-                        <div class="file-name" id="edge-filename">No file selected</div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="algorithm">Optimization Algorithm</label>
-                    <select id="algorithm">
-                        <option value="genetic">Genetic Algorithm</option>
-                        <option value="simulated_annealing">Simulated Annealing</option>
-                        <option value="particle_swarm">Particle Swarm Optimization</option>
-                        <option value="ant_colony">Ant Colony Optimization</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="honeypots">Number of Honeypots</label>
-                    <input type="number" id="honeypots" min="1" max="20" value="5">
-                </div>
-                <button type="submit" id="submit-btn">Optimize Network</button>
-            </form>
-            <div class="algorithm-info" id="algorithm-info">
-                <strong>Genetic Algorithm:</strong> Uses evolutionary principles to find optimal honeypot placement through selection, crossover, and mutation operations.
-            </div>
+    <div class="controls-panel">
+        <div class="panel-header">Network Configuration</div>
+        <div class="file-input">
+            <label for="csv-data">Network Data</label>
+            <label for="csv-data" class="file-upload">Upload CSV File</label>
+            <input type="file" id="csv-data" accept=".csv">
+            <div class="file-name" id="filename">No file selected</div>
         </div>
-        <div class="panel visualization-panel">
-            <h2>Network Visualization</h2>
-            <div class="canvas-container">
-                <div id="canvas"></div>
-                <div class="loading" id="loading">
-                    <div class="spinner"></div>
-                    <div class="loading-text">Optimizing network...</div>
-                </div>
-                <div class="legend">
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #ff8a80;"></div>
-                        <span>High Value Asset</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #4fc3f7;"></div>
-                        <span>Honeypot</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #ffab40;"></div>
-                        <span>Attack Path</span>
-                    </div>
-                </div>
+        
+        <button class="control-btn" id="sample-data">Load Sample Data</button>
+        <button class="control-btn secondary" id="rotate-toggle">Pause Rotation</button>
+        <button class="control-btn secondary" id="reset-view">Reset Camera View</button>
+        
+        <div class="slider-container">
+            <div class="slider-label">
+                <span>Node Size</span>
+                <span id="size-value">1.5</span>
             </div>
+            <input type="range" min="0.5" max="3" step="0.1" value="1.5" class="slider" id="node-size">
+        </div>
+        
+        <div class="camera-controls">
+            <button class="camera-btn" id="zoom-in">+</button>
+            <button class="camera-btn" id="reset-zoom">○</button>
+            <button class="camera-btn" id="zoom-out">-</button>
+        </div>
+        <div class="algorithm-selector control-group">
+            <label for="algorithm-select">Optimization Algorithm:</label>
+            <select id="algorithm-select">
+                <option value="GA" selected>Genetic Algorithm (GA)</option>
+                <option value="WOA">Whale Optimization (WOA)</option>
+                <option value="HHO">Harris Hawks (HHO)</option>
+            </select>
+       </div>
+        <button class="control-btn predict-btn" id="predict-btn">Predict Honeypots</button>
+        <div class="prediction-result" id="prediction-result">
             
-            <div class="controls">
-                <button class="control-btn" id="rotate-toggle">Pause Rotation</button>
-                <button class="control-btn" id="attack-paths-toggle">Show Attack Paths</button>
-                <button class="control-btn" id="reset-view">Reset View</button>
+        </div>
+    </div>
+    
+    <div class="network-stats">
+        <div class="panel-header">Network Statistics</div>
+        <div class="stat-item">
+            <div class="stat-label">Total Systems:</div>
+            <div class="stat-value" id="total-nodes">--</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Total Connections:</div>
+            <div class="stat-value" id="total-edges">--</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Most Connected:</div>
+            <div class="stat-value" id="most-connected">--</div>
+        </div>
+    </div>
+    
+    <div class="legend">
+        <div class="legend-title">Legend</div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #bd6464;"></div>
+            <span>Systems</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #62bbee;"></div>
+            <span>Connections</span>
+        </div>
+    </div>
+    
+    <div class="node-inspector" id="inspector">
+        <div class="inspector-header">
+            <span>System Details</span>
+            <button class="close-btn" id="close-inspector">×</button>
+        </div>
+        <div class="inspector-content">
+            <div class="inspector-item">
+                <div class="inspector-label">System Name</div>
+                <div class="inspector-value" id="node-name">--</div>
             </div>
-            
-            <div class="stats-panel">
-                <div class="stats-title">Optimization Results</div>
-                <div class="stats-content" id="stats-content">
-                    <div class="stat-item">
-                        <div class="stat-label">Total Nodes</div>
-                        <div class="stat-value">--</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Total Edges</div>
-                        <div class="stat-value">--</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Honeypots Placed</div>
-                        <div class="stat-value">--</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Optimization Score</div>
-                        <div class="stat-value">--</div>
-                    </div>
-                </div>
+            <div class="inspector-item">
+                <div class="inspector-label">IP Address</div>
+                <div class="inspector-value" id="node-ip">--</div>
+            </div>
+            <div class="inspector-item">
+                <div class="inspector-label">Connections</div>
+                <div class="inspector-value" id="node-connections-count">--</div>
+                <div class="connections-list" id="connections-list"></div>
             </div>
         </div>
     </div>
-
-    <script src="scripts\main.js"></script>
-    </body>
+    
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading network data...</div>
+    </div>
+    
+    <canvas id="canvas"></canvas>
+    <script type="module" src="./scripts/main.js"></script>
+</body>
 </html>
